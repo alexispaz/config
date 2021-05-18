@@ -1,0 +1,43 @@
+[user]
+  name = XXX
+  email = XXX
+[core]
+  editor = vim
+[alias]
+  hist = log --graph --decorate --pretty=format:'%Cred%h%Creset - %Cgreen(%ad) %C(bold blue)<%an>%Creset %C(auto)%d%n''         %Creset %s' --abbrev-commit --date=short
+  histo = hist --remotes=origin --branches=*
+  hista = hist --all
+  type = cat-file -t
+  dump = cat-file -p
+  tar =  archive --format=tar --output "spore.tar" HEAD 
+  done =  commit -aeF "message"
+  redo =  commit -a --amend
+  minor =  commit -ac "fixup? Minor changes of the previous commit."
+  patch = ! git stash && git stash show -p > patch && git stash pop
+  ls = ls-files
+  model-merge = merge --no-ff
+  follow = log --follow -p --
+  trash = !mkdir -p trash && git ls-files --others --exclude-standard | xargs mv -f -t trash
+  # From https://stackoverflow.com/a/4528593/1342186:
+  sudogc = ! git reflog expire --expire-unreachable=now --all && git gc --prune=now
+[push]
+  default = simple
+[diff]
+  tool = vimdiff
+[merge]
+  tool = diffconflicts
+[mergetool "diffconflicts"]
+  cmd = vim -c DiffConflicts "$MERGED" "$BASE" "$LOCAL" "$REMOTE" 
+  trustExitCode = true
+[mergetool]
+  keepBackup = false
+[difftool "vimdiff"]
+  cmd = vim -f -d -c 'wincmd l' -c 'cd "$GIT_PREFIX"' "$REMOTE" "$LOCAL" 
+[difftool]
+  prompt = false
+[pull]
+  ff = only
+# A driver that does not touch the files and exits with code zero leaves our
+# current file alone during a merge  
+# [merge "ours"]
+#   driver = true
